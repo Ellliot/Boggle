@@ -38,11 +38,11 @@ public class MyTrie {
 	if(this.children[index]== null) {
 	    return false;
 	}
-	if(children[index].isWord == true) {
-	    return true;
-	}
 	if(string.length()>1) {
 	    children[index].contains(string.substring(1));
+	}
+	if(children[index].isWord == true) {
+	    return true;
 	}
 	return false;
     }
