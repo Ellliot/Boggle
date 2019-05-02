@@ -75,37 +75,27 @@ public class MyTrie {
      * @return
      */
     public boolean add(String string) {
-	boolean flag = false;
 	int index = string.substring(0,1).hashCode()-"a".hashCode();
 	if(this.children[index]== null) {
 	    MyTrie newLetter = new MyTrie();
 	    children[index] = newLetter;
-	    flag = true;
-	}
-	if(children[index].isWord == true) {
-	    return false;
 	}
 	if(string.length()>1) {
 	    children[index].add(string.substring(1));
-	}else{
-	    children[index].isWord = true;
-	    if(flag == true) {
-		size ++;
-		return true;
-	    }
 	}
-	return false;
+	if (children[index].isWord == true) {
+	    return false;
+	}
+	children[index].isWord = true;
+	size ++;
+	return true;
     }
     /**
      * Return true if the trie contains no strings, false otherwise.
      * @return
      */
     public boolean isEmpty() {
-	if(size == 0) {
-	    return true;
-	}else {
-	    return false;
-	}
+	return size == 0;
     }
     /**
      * Return a string representation of the set of strings contained in the trie.
