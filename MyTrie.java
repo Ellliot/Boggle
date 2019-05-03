@@ -16,11 +16,6 @@ public class MyTrie {
 	children = new MyTrie[cap]; 
     }
     public int size() {
-	for(int i = 0; i<cap; i++) {
-	    if(children[i] != null) {
-		size = size + children[i].size();
-	    }
-	}
 	return size;
     }
     /**
@@ -43,12 +38,12 @@ public class MyTrie {
 	if(this.children[index]== null) {
 	    return false;
 	}
-	if(children[index].isWord == true) {
-	    return true;
-	}
 	if(string.length()>1) {
 	    return children[index].contains(string.substring(1));
 	}else {
+	    if(children[index].isWord == true) {
+		    return true;
+		}
 	    return false;
 	}
     }
@@ -66,11 +61,14 @@ public class MyTrie {
 	if(this.children[index]== null) {
 	    return false;
 	}
-	
 	if(prefix.length()>1) {
-	    children[index].containsPrefix(prefix.substring(1));
+	    return children[index].containsPrefix(prefix.substring(1));
+	}else {
+		if(this.children[index]!= null) {
+		    return true;
+		}
+		return false;
 	}
-	return true;
     }
     /**
      * Insert string in the trie, if it is not already present. 
@@ -91,9 +89,9 @@ public class MyTrie {
 	    children[index] = newLetter;
 	}
 	if(string.length()>1) {
+	    this.size ++;
 	    return children[index].add(string.substring(1));
 	}else{
-	    this.size ++;
 	    return children[index].isWord = true;
 	}
 	}
@@ -104,7 +102,10 @@ public class MyTrie {
      * @return
      */
     public boolean isEmpty() {
-	return size == 0;
+	if(this.size == 0) {
+	    return true;
+	}
+	return false;
     }
     /**
      * Return a string representation of the set of strings contained in the trie.
@@ -135,18 +136,18 @@ public class MyTrie {
      * @return
      */
     
-    private String help(String prefix, String result) {
-	int index = prefix.hashCode()-"a".hashCode();
-	if(children[index].isWord == true) {
-	    return result;
-	}
+    private ArrayList<String> help(String prefix, ArrayList<String> result) {
+	int index = prefix.substring(prefix.length()-1).hashCode()-"a".hashCode();
 	for(int i = 0; i<cap; i++) {
 	    if(children[index].children[i] != null) {
-		result = result + Character.toString((char)(i + "a".hashCode()));
-		prefix = Character.toString((char)(i + "a".hashCode()));
+		prefix = prefix + Character.toString((char)(i + "a".hashCode()));
+		if(children[index].children[i].isWord == true) {
+		    result.add(prefix);
+		}else {
+		    return children[index].help(prefix,result); 
+		}
 	    }    
 	}
-	children[index].help(prefix,result);
 	return null;
     }
 
@@ -155,7 +156,7 @@ public class MyTrie {
 	for(int i = 0; i<cap; i++) {
 	    if(children[i] != null) {
 		String c = Character.toString((char)(i + "a".hashCode()));
-		novel.add(help(c,c));
+		help(c,novel);
 	    }
 	}
 	return novel;
