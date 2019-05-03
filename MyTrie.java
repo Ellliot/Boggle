@@ -52,6 +52,7 @@ public class MyTrie {
 	    return false;
 	}
     }
+
     /**
      * Return true if the trie contains the edges represented by prefix, false otherwise. 
      * Note that this is not checking isWord values, just existence of the appropriate children. 
@@ -103,11 +104,7 @@ public class MyTrie {
      * @return
      */
     public boolean isEmpty() {
-	if(size == 0) {
-	    return true;
-	}else {
-	    return false;
-	}
+	return size == 0;
     }
     /**
      * Return a string representation of the set of strings contained in the trie.
