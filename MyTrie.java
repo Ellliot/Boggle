@@ -16,6 +16,11 @@ public class MyTrie {
 	children = new MyTrie[cap]; 
     }
     public int size() {
+	for(int i = 0; i<cap; i++) {
+	    if(children[i] != null) {
+		size = size + children[i].size();
+	    }
+	}
 	return size;
     }
     /**
@@ -42,9 +47,10 @@ public class MyTrie {
 	    return true;
 	}
 	if(string.length()>1) {
-	    children[index].contains(string.substring(1));
+	    return children[index].contains(string.substring(1));
+	}else {
+	    return false;
 	}
-	return false;
     }
     /**
      * Return true if the trie contains the edges represented by prefix, false otherwise. 
@@ -75,26 +81,22 @@ public class MyTrie {
      * @return
      */
     public boolean add(String string) {
-	boolean flag = false;
+	if(this.contains(string) == true) {
+	    return false;
+	}else {	    
 	int index = string.substring(0,1).hashCode()-"a".hashCode();
 	if(this.children[index]== null) {
 	    MyTrie newLetter = new MyTrie();
 	    children[index] = newLetter;
-	    flag = true;
-	}
-	if(children[index].isWord == true) {
-	    return false;
 	}
 	if(string.length()>1) {
-	    children[index].add(string.substring(1));
+	    return children[index].add(string.substring(1));
 	}else{
-	    children[index].isWord = true;
-	    if(flag == true) {
-		size ++;
-		return true;
-	    }
+	    this.size ++;
+	    return children[index].isWord = true;
 	}
-	return false;
+	}
+
     }
     /**
      * Return true if the trie contains no strings, false otherwise.
@@ -137,21 +139,20 @@ public class MyTrie {
      */
     
     private String help(String prefix, String result) {
-	int index = prefix.substring(0,1).hashCode()-"a".hashCode();
-	if(prefix.length()>1) {
-	    children[index].help(prefix.substring(1),result);
-	}else {
-	    for(int i = 0; i<cap; i++) {
-		    if(children[i] != null) {
-			result = result + Character.toString((char)(i + "a".hashCode()));
-		    }
-		    children[index].help(result,result);
-		    
-	    }
+	int index = prefix.hashCode()-"a".hashCode();
+	if(children[index].isWord == true) {
+	    return result;
 	}
-	return result;
+	for(int i = 0; i<cap; i++) {
+	    if(children[index].children[i] != null) {
+		result = result + Character.toString((char)(i + "a".hashCode()));
+		prefix = Character.toString((char)(i + "a".hashCode()));
+	    }    
+	}
+	children[index].help(prefix,result);
+	return null;
     }
-    
+
     private ArrayList<String> toList(){
 	ArrayList<String> novel = new ArrayList<String>();
 	for(int i = 0; i<cap; i++) {

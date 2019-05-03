@@ -23,7 +23,9 @@ class MyTrieTest {
 
     @Test
     void testContains() {
-	fail("Not yet implemented");
+	MyTrie test = new MyTrie();
+	assertTrue(test.add("love"));
+	assertTrue(test.contains("love"));
     }
 
     @Test
@@ -33,7 +35,14 @@ class MyTrieTest {
 
     @Test
     void testAdd() {
-	fail("Not yet implemented");
+	MyTrie test = new MyTrie();
+	assertTrue(test.add("love"));
+	assertEquals(1,test.size());
+	assertFalse(test.add("love"));
+	assertTrue(test.add("who"));
+	assertEquals(2,test.size());
+	assertTrue(test.add("lofi"));
+	assertEquals(3,test.size());
     }
 
     @Test
