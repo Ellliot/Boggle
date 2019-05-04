@@ -153,7 +153,8 @@ public class Boggle {
     
     //TODO
     private void search(Square sq, String prefix) {
-	
+	int row = sq.getX();
+	int col = sq.getY();
     }
     
     private void fillFoundWords() {

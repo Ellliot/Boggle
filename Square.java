@@ -17,6 +17,7 @@ public class Square {
 	this.x = x;
 	this.y = y;
 	this.letter = letter.toLowerCase();
+	marked = false;
     }
 
     public int      getX()      { return x; }
