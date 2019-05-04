@@ -141,7 +141,7 @@ public class Boggle {
 	    for (int j = 0; j < 4; j++) {
 		if (putDice.get(location).hashCode()=="q".hashCode())
 		{
-		    putDice.set(location, "qu"); //???
+		    putDice.set(location, "qu"); 
 		}
 		board[i][j] = new Square(i,j,putDice.get(location));
 		location++;
@@ -156,7 +156,6 @@ public class Boggle {
 	
     }
     
-    //TODO ??
     private void fillFoundWords() {
 	for(Square[] row: board){
 	    for(Square col: row) {
