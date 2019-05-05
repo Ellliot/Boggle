@@ -151,12 +151,54 @@ public class Boggle {
 	putDice = null;
     }
     
+    
     //TODO
     private void search(Square sq, String prefix) {
-	int row = sq.getX();
-	int col = sq.getY();
+	int row, col;
+	//   if (prefix.substring(0, 1).compareTo(sq.toString()) == 0 ||(prefix.substring(0, 2).compareTo("qu") == 0 && sq.toString().compareTo("qu") == 0)) {
+	if (lex.containsPrefix(prefix)) {
+	    row = sq.getX();
+	    col = sq.getY();
+	    String l = sq.toString();
+	    sq.mark();
+	    String subPre = prefix + l;
+	    if (row - 1 >= 0 && col - 1 >= 0 && !board[row - 1][col - 1].isMarked()) {
+		search(board[row - 1][col - 1], subPre);
+		sq.unmark();
+	    }
+	    if (row - 1 >= 0 && !board[row - 1][col].isMarked()) {
+		search(board[row - 1][col], subPre);
+		sq.unmark();
+	    }
+	    if (row - 1 >= 0 && col + 1 < 4 && !board[row - 1][col + 1].isMarked()) {
+		search(board[row - 1][col + 1], subPre);
+		sq.unmark();
+	    }
+	    if (col + 1 < 4 && !board[row][col + 1].isMarked()) {
+		search(board[row][col + 1], subPre);
+		sq.unmark();
+	    }
+	    if (row + 1 < 4 && col + 1 < 4 && !board[row + 1][col + 1].isMarked()) {
+		search(board[row + 1][col + 1], subPre);
+		sq.unmark();
+	    }
+	    if (row + 1 < 4 && !board[row + 1][col].isMarked()) {
+		search(board[row + 1][col], subPre);
+		sq.unmark();
+	    }
+	    if (row + 1 < 4 && col - 1 >= 0 && !board[row + 1][col - 1].isMarked()) {
+		search(board[row + 1][col - 1], subPre);
+		sq.unmark();
+	    }
+	    if (col - 1 >= 0 && !board[row][col - 1].isMarked()) {
+		search(board[row][col - 1], subPre);
+		sq.unmark();
+	    }
+	}
+
+	//}
     }
-    
+
     private void fillFoundWords() {
 	for(Square[] row: board){
 	    for(Square col: row) {
@@ -164,7 +206,7 @@ public class Boggle {
 	    }
 	}
     }
-    
+
     //TODO
     private ArrayList<Square> squaresForWord(Square sq, String w){
 	return null;
