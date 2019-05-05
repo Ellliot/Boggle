@@ -136,21 +136,25 @@ public class MyTrie {
      * @return
      */
     
-    private ArrayList<String> help(String prefix, ArrayList<String> result) {
+    private void help(String prefix, ArrayList<String> result) {
 	int index = prefix.substring(prefix.length()-1).hashCode()-"a".hashCode();
 	for(int i = 0; i<cap; i++) {
 	    if(children[index].children[i] != null) {
-		prefix = prefix + Character.toString((char)(i + "a".hashCode()));
+		String newPre = prefix + Character.toString((char)(i + "a".hashCode()));
 		if(children[index].children[i].isWord == true) {
-		    result.add(prefix);
+		    result.add(newPre);
+		    for(int x = 0; x<cap; x++) {
+			    if(children[index].children[i].children[x] != null) {
+				children[index].help(newPre,result); 
+			    }
+		    }
 		}else {
-		    return children[index].help(prefix,result); 
+		   children[index].help(newPre,result); 
 		}
-	    }    
+	    }
 	}
-	return null;
     }
-
+    
     private ArrayList<String> toList(){
 	ArrayList<String> novel = new ArrayList<String>();
 	for(int i = 0; i<cap; i++) {

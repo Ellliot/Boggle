@@ -11,7 +11,7 @@ class MyTrieTest {
 
     @Test
     void testMyTrie() {
-	fail("Not yet implemented");
+	MyTrie test = new MyTrie();
     }
 
     @Test
@@ -27,7 +27,8 @@ class MyTrieTest {
 
     @Test
     void testContainsEmptyString() {
-	fail("Not yet implemented");
+	MyTrie test = new MyTrie();
+	assertFalse(test.containsEmptyString());
     }
 
     @Test
@@ -85,17 +86,30 @@ class MyTrieTest {
 	real.add("who");
 	Iterator<String> realIte = real.iterator();
 	Iterator<String> testIte = test.iterator();
-	System.out.println(test);
-	assertEquals(realIte.next(),testIte.next());
-	assertEquals(realIte.next(),testIte.next());
-	assertEquals(realIte.next(),testIte.next());
-	//while(testIte.hasNext() && realIte.hasNext()) {
-	//}
+	while(testIte.hasNext() && realIte.hasNext()) {
+	    assertEquals(realIte.next(),testIte.next());
+		assertEquals(realIte.next(),testIte.next()); 
+	}
     }
 
     @Test
     void testIterator() {
-	fail("Not yet implemented");
+	MyTrie test = new MyTrie();
+	ArrayList<String> real = new ArrayList<String>();
+	test.add("love");
+	test.add("who");
+	test.add("lovely");
+	test.add("lofi");
+	real.add("lofi");
+	real.add("love");
+	real.add("lovely");
+	real.add("who");
+	Iterator<String> realIte = real.iterator();
+	Iterator<String> testIte = test.iterator();
+	while(testIte.hasNext() && realIte.hasNext()) {
+	    assertEquals(realIte.next(),testIte.next());
+		assertEquals(realIte.next(),testIte.next()); 
+	}
     }
     
 

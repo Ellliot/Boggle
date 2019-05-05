@@ -532,7 +532,15 @@ public class BoggleFrame extends JFrame {
             scoreText.setText(0+"");
             scoreText.repaint(scoreText.getVisibleRect());
         }
+        
 
     } // class PlayerView
+    public static void main(String[] args) {
+        Boggle boggle = new Boggle("enable.txt");
+        BoggleFrame bFrame = new BoggleFrame( boggle );
+        bFrame.pack();
+        bFrame.setLocationRelativeTo(null);
+        bFrame.setVisible(true);
+    }
 
 }
