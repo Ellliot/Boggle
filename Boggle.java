@@ -151,17 +151,14 @@ public class Boggle {
 
             unmark it*/
 
-    private void help(Square sq, String prefix, MyTrie wordlist) {
+    private void search(Square sq, String prefix) {
 	if(lex.contains(prefix) == true) {
-	    wordlist.add(prefix);
+	    foundWords.add(prefix);
 	}
 	if(lex.containsPrefix(prefix)) {
 	    String l = sq.toString();
 	    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
-		for(int j = -1; j<=1; j++) {
-		    if(i == 0 && j==0) {
-			continue; 
-		    }
+		for(int j = sq.getY()-1; j<=sq.getY()+1; j++) {
 		    if(i == -1 | j == -1) {
 			continue;
 		    }
@@ -171,7 +168,7 @@ public class Boggle {
 		    if(board[i][j]!= null && !board[i][j].isMarked()) {
 			Square s = board[i][j];
 			s.mark();
-			this.help(s, prefix+l, wordlist);
+			this.search(s, prefix+l);
 			s.unmark();
 		    }
 		    
@@ -181,14 +178,7 @@ public class Boggle {
 
 	
     }
-    //TODO
-    private void search(Square sq, String prefix) {
-	for(int i = 0; i<4; i++) {
-	    for(int j = 0; i<4; i++) {
-		this.help(board[i][j], board[i][j].toString(), foundWords);
-	    }
-	}
-    }
+
 
     private void fillFoundWords() {
 	for(Square[] row: board){
