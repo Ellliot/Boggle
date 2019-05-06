@@ -22,6 +22,7 @@ public class Boggle {
 	while (readLex.hasNextLine()) {
 	    lex.add(readLex.nextLine());
 	}
+	board = new Square[4][4];
 	this.fillDice();
     }
 
@@ -83,23 +84,9 @@ public class Boggle {
 	guesses = new MyTrie();
 	this.fillBoardFromDice();
 	this.fillFoundWords();
+	System.out.println(foundWords);
     }
     
-    /*
-     * Returns a list of valid Squares on the board that form the word w
-     */
-    public ArrayList<Square> squaresForWord(String w){
-	ArrayList<Square> temp = new ArrayList<Square>();
-	for (Square[] row: board) {
-	    for (Square col: row) {
-		temp = squaresForWord(col,w);
-		if (!temp.isEmpty()) {
-		    return temp;
-		}
-	    }
-	}
-	return temp;
-    }
 
     /*
      *Construct the dice from the file dice.txt.
@@ -132,9 +119,9 @@ public class Boggle {
 	int location = 0;
 	
 	for (int i = 0; i < 16; i++) {
-	    initialSeq.add(dice[i]);
+	    initialSeq.add(dice[(int) (Math.random()*15)]);
 	}
-	for (int j = 16; j > 0; j++) {
+	for (int j = 16; j > 0; j--) {
 	    putDice.add(initialSeq.remove((int)Math.random()*j).substring((int)Math.random() * 6, (int)Math.random() * 6 + 1).toLowerCase());
 	}
 	for (int i = 0; i < 4; i++) {
@@ -150,53 +137,57 @@ public class Boggle {
 	initialSeq =null;
 	putDice = null;
     }
-    
-    
-    //TODO
-    private void search(Square sq, String prefix) {
-	int row, col;
-	//   if (prefix.substring(0, 1).compareTo(sq.toString()) == 0 ||(prefix.substring(0, 2).compareTo("qu") == 0 && sq.toString().compareTo("qu") == 0)) {
-	if (lex.containsPrefix(prefix)) {
-	    row = sq.getX();
-	    col = sq.getY();
+    /**search(Square sq, String prefix) 
+    // check to see if we have found a word on the current path
+    if the current path represents a word in the dictionary
+        add the word to the wordlist
+    // continue searching on all possible paths from this square
+    if there are any words possible from this prefix (use containsPrefix())
+        let l = the letter in sq
+        for each unmarked square s adjacent to sq
+            mark it
+            recursively search for words starting at square s with 
+                   prefix prefix+sq.letter, and add these to wordlist
+
+            unmark it*/
+
+    private void help(Square sq, String prefix, MyTrie wordlist) {
+	if(lex.contains(prefix) == true) {
+	    wordlist.add(prefix);
+	}
+	if(lex.containsPrefix(prefix)) {
 	    String l = sq.toString();
-	    sq.mark();
-	    String subPre = prefix + l;
-	    if (row - 1 >= 0 && col - 1 >= 0 && !board[row - 1][col - 1].isMarked()) {
-		search(board[row - 1][col - 1], subPre);
-		sq.unmark();
-	    }
-	    if (row - 1 >= 0 && !board[row - 1][col].isMarked()) {
-		search(board[row - 1][col], subPre);
-		sq.unmark();
-	    }
-	    if (row - 1 >= 0 && col + 1 < 4 && !board[row - 1][col + 1].isMarked()) {
-		search(board[row - 1][col + 1], subPre);
-		sq.unmark();
-	    }
-	    if (col + 1 < 4 && !board[row][col + 1].isMarked()) {
-		search(board[row][col + 1], subPre);
-		sq.unmark();
-	    }
-	    if (row + 1 < 4 && col + 1 < 4 && !board[row + 1][col + 1].isMarked()) {
-		search(board[row + 1][col + 1], subPre);
-		sq.unmark();
-	    }
-	    if (row + 1 < 4 && !board[row + 1][col].isMarked()) {
-		search(board[row + 1][col], subPre);
-		sq.unmark();
-	    }
-	    if (row + 1 < 4 && col - 1 >= 0 && !board[row + 1][col - 1].isMarked()) {
-		search(board[row + 1][col - 1], subPre);
-		sq.unmark();
-	    }
-	    if (col - 1 >= 0 && !board[row][col - 1].isMarked()) {
-		search(board[row][col - 1], subPre);
-		sq.unmark();
-	    }
+	    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
+		for(int j = -1; j<=1; j++) {
+		    if(i == 0 && j==0) {
+			continue; 
+		    }
+		    if(i == -1 | j == -1) {
+			continue;
+		    }
+		    if(i == 4 | j == 4) {
+			continue;
+		    }
+		    if(board[i][j]!= null && !board[i][j].isMarked()) {
+			Square s = board[i][j];
+			s.mark();
+			this.help(s, prefix+l, wordlist);
+			s.unmark();
+		    }
+		    
+		}
+	    }  
 	}
 
-	//}
+	
+    }
+    //TODO
+    private void search(Square sq, String prefix) {
+	for(int i = 0; i<4; i++) {
+	    for(int j = 0; i<4; i++) {
+		this.help(board[i][j], board[i][j].toString(), foundWords);
+	    }
+	}
     }
 
     private void fillFoundWords() {
@@ -206,14 +197,59 @@ public class Boggle {
 	    }
 	}
     }
-
+    
+    /*
+     * Returns a list of valid Squares on the board that form the word w
+     */
+    public ArrayList<Square> squaresForWord(String w){
+	for(int i = 0; i<4; i++) {
+		for(int j = 0; j<4; j++) {
+		    return this.squaresForWord(board[i][j], w);
+		}
+	    }
+	return null;
+    }
     //TODO
     private ArrayList<Square> squaresForWord(Square sq, String w){
+	String l = sq.toString();
+	if( l == w) {
+	    ArrayList<Square> novel = new ArrayList();
+	    for(int i = 0; i<4; i++) {
+		for(int j = 0; j<4; j++) {
+		    if(board[i][j].isMarked()) {
+			novel.add(board[i][j]);
+		    }
+		}
+	    }
+	    novel.add(sq);
+	    return novel;
+	}
+	if(w.length()>1) {
+	    if(l == w.substring(w.length()-1)) {
+		    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
+			for(int j = -1; j<=1; j++) {
+			    if(i == -1 | j == -1) {
+				continue;
+			    }
+			    if(i == 4 | j == 4) {
+				continue;
+			    }
+			    if(board[i][j]!= null && !board[i][j].isMarked()) {
+				Square s = board[i][j];
+				s.mark();
+				this.squaresForWord(s,w.substring(1));
+			    }
+			    
+			}
+		    }
+	    }
+  
+	}
 	return null;
     }
 
     public static void main (String args[]) {
-	Boggle boggle = new Boggle( args[0] );
+	Boggle boggle = new Boggle("enable.txt");
 	BoggleFrame bFrame = new BoggleFrame( boggle );
 	bFrame.pack();
 	bFrame.setLocationRelativeTo(null);
