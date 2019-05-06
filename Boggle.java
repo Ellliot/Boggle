@@ -194,13 +194,14 @@ public class Boggle {
 	for(int i = 0; i<4; i++) {
 	    for(int j = 0; j<4; j++) {
 		if(w.substring(0,1).equals(board[i][j].toString())||("qu".equals(board[i][j].toString()) && w.substring(0,2).compareTo("qu") == 0)) {
-		    if(this.squaresForWord(board[i][j], w).size() > 0)
+		    if(this.squaresForWord(board[i][j], w).size() > 0) {
 			for(Square[] row: board) {
 			    for (Square col: row) {
 				col.unmark();
 			    }
 			}
 			return this.squaresForWord(board[i][j], w);
+		    }
 		}
 	    }
 	    }
@@ -211,7 +212,7 @@ public class Boggle {
 	String l = sq.toString();
 	if(l.equals(w.substring(0,1))||(l.equals("qu") && "qu".equals(w.substring(0,2)))) {
 	    sq.mark();
-	    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
+	    for(int i = sq.getX()-1; i <= sq.getX()+1; i++) {   
 		for(int j = sq.getY()-1; j<=sq.getY()+1; j++) {
 		    if(i == -1 || j == -1) {
 			continue;
@@ -219,15 +220,18 @@ public class Boggle {
 		    if(i == 4 || j == 4) {
 			continue;
 		    }
+		    if (i == sq.getX() && j == sq.getY()) {
+			continue;
+		    }
 		    Square s = board[i][j];
 		    if(!s.isMarked()) {
 			if(w.length()>1) {
-			    if(w.length() > 2 && w.substring(0,2).equals("qu")) {
-				squaresForWord(s,w.substring(2));
-				s.unmark();
-			    } else {
-				squaresForWord(s,w.substring(1));
-				s.unmark();
+			    if (w.substring(1, 2).equals(s.toString())) {
+				if(w.length() > 2 && w.substring(0,2).equals("qu")) {
+				    return squaresForWord(s,w.substring(2));
+				} else {
+				    return squaresForWord(s,w.substring(1));
+				}
 			    }
 			}else {
 			    ArrayList<Square> novel = new ArrayList<Square>();
@@ -238,10 +242,22 @@ public class Boggle {
 				    }
 				}
 			    }
-			    return novel;
+			    if (novel.size()>0) {
+				for(Square[] row: board) {
+				    for (Square col: row) {
+					col.unmark();
+				    }
+				}
+				return novel;
+			    }
 			}
 		    }
 		}
+	    }
+	}
+	for(Square[] row: board) {
+	    for (Square col: row) {
+		col.unmark();
 	    }
 	}
 	return new ArrayList<Square>();
