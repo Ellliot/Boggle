@@ -194,6 +194,12 @@ public class Boggle {
 	for(int i = 0; i<4; i++) {
 	    for(int j = 0; j<4; j++) {
 		if(w.substring(0,1).equals(board[i][j].toString())||("qu".equals(board[i][j].toString()) && w.substring(0,2).compareTo("qu") == 0)) {
+		    if(this.squaresForWord(board[i][j], w).size() > 0)
+			for(Square[] row: board) {
+			    for (Square col: row) {
+				col.unmark();
+			    }
+			}
 			return this.squaresForWord(board[i][j], w);
 		}
 	    }
@@ -203,7 +209,8 @@ public class Boggle {
     //TODO
     private ArrayList<Square> squaresForWord(Square sq, String w){
 	String l = sq.toString();
-	if(l.equals(w.substring(0,1))) {
+	if(l.equals(w.substring(0,1))||(l.equals("qu") && "qu".equals(w.substring(0,2)))) {
+	    sq.mark();
 	    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
 		for(int j = sq.getY()-1; j<=sq.getY()+1; j++) {
 		    if(i == -1 || j == -1) {
@@ -215,8 +222,14 @@ public class Boggle {
 		    Square s = board[i][j];
 		    if(!s.isMarked()) {
 			if(w.length()>1) {
-			    return this.squaresForWord(s,w.substring(1));
-		    }else {
+			    if(w.length() > 2 && w.substring(0,2).equals("qu")) {
+				squaresForWord(s,w.substring(2));
+				s.unmark();
+			    } else {
+				squaresForWord(s,w.substring(1));
+				s.unmark();
+			    }
+			}else {
 			    ArrayList<Square> novel = new ArrayList<Square>();
 			    for(int x = 0; x<4; x++) {
 				for(int y = 0; y<4; y++) {
@@ -229,11 +242,8 @@ public class Boggle {
 			}
 		    }
 		}
-
-
 	    }
-	    sq.unmark();
-	    }
+	}
 	return new ArrayList<Square>();
     }
 
