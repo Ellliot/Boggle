@@ -34,6 +34,9 @@ public class MyTrie {
      * @return
      */
     public boolean contains(String string) {
+	if(string.length() == 0) {
+	    return true;
+	}
 	int index = string.substring(0,1).hashCode()-"a".hashCode();
 	if(this.children[index]== null) {
 	    return false;
@@ -57,6 +60,9 @@ public class MyTrie {
      * @return
      */
     public boolean containsPrefix(String prefix) {
+	if(prefix.length() == 0) {
+	    return true;
+	}
 	int index = prefix.substring(0,1).hashCode()-"a".hashCode();
 	if(this.children[index]== null) {
 	    return false;
