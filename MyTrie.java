@@ -35,7 +35,7 @@ public class MyTrie {
      */
     public boolean contains(String string) {
 	if(string.length() == 0) {
-	    return true;
+	    return false;
 	}
 	int index = string.substring(0,1).hashCode()-"a".hashCode();
 	if(this.children[index]== null) {
@@ -142,7 +142,7 @@ public class MyTrie {
      * @return
      */
     
-    private void help(String prefix, ArrayList<String> result) {
+    public void help(String prefix, ArrayList<String> result) {
 	int index = prefix.substring(prefix.length()-1).hashCode()-"a".hashCode();
 	for(int i = 0; i<cap; i++) {
 	    if(children[index].children[i] != null) {
@@ -152,6 +152,7 @@ public class MyTrie {
 		    for(int x = 0; x<cap; x++) {
 			    if(children[index].children[i].children[x] != null) {
 				children[index].help(newPre,result); 
+				break;
 			    }
 		    }
 		}else {
@@ -161,7 +162,7 @@ public class MyTrie {
 	}
     }
     
-    private ArrayList<String> toList(){
+    public ArrayList<String> toList(){
 	ArrayList<String> novel = new ArrayList<String>();
 	for(int i = 0; i<cap; i++) {
 	    if(children[i] != null) {

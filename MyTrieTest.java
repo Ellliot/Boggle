@@ -76,14 +76,15 @@ class MyTrieTest {
     void testToString() {
 	MyTrie test = new MyTrie();
 	ArrayList<String> real = new ArrayList<String>();
-	test.add("love");
-	test.add("who");
-	test.add("lovely");
+	test.add("aa");
+	test.add("aah");
+	test.add("aas");
 	test.add("lofi");
 	real.add("lofi");
 	real.add("love");
 	real.add("lovely");
 	real.add("who");
+	System.out.println(test.toList());
 	Iterator<String> realIte = real.iterator();
 	Iterator<String> testIte = test.iterator();
 	while(testIte.hasNext() && realIte.hasNext()) {

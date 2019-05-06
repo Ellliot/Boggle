@@ -152,8 +152,10 @@ public class Boggle {
             unmark it*/
 
     private void search(Square sq, String prefix) {
+	if(lex.contains(prefix) == true) {
+	    foundWords.add(prefix);
+	}
 	if(lex.containsPrefix(prefix)) {
-	    String l = sq.toString();
 	    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
 		for(int j = sq.getY()-1; j<=sq.getY()+1; j++) {
 		    if(i == -1 || j == -1) {
@@ -162,18 +164,15 @@ public class Boggle {
 		    if(i == 4 || j == 4) {
 			continue;
 		    }
-		    if(board[i][j]!= null && !board[i][j].isMarked()) {
+		    if(!board[i][j].isMarked()) {
 			Square s = board[i][j];
 			s.mark();
-			this.search(s, prefix+l);
+			this.search(s, prefix+s);
 			s.unmark();
 		    }
 		    
 		}
 	    }  
-	}
-	if(lex.contains(prefix) == true) {
-	    foundWords.add(prefix);
 	}
 
 	
@@ -193,29 +192,20 @@ public class Boggle {
      */
     public ArrayList<Square> squaresForWord(String w){
 	for(int i = 0; i<4; i++) {
-		for(int j = 0; j<4; j++) {
+	    for(int j = 0; j<4; j++) {
+		if(w.substring(0,1).equals(board[i][j].toString()) ) {
 		    if(this.squaresForWord(board[i][j], w) != null) {
 			return this.squaresForWord(board[i][j], w);
 		    }
 		}
+
+	    }
 	    }
 	return null;
     }
     //TODO
     private ArrayList<Square> squaresForWord(Square sq, String w){
 	String l = sq.toString();
-	if( l.equals(w)) {
-	    ArrayList<Square> novel = new ArrayList();
-	    for(int i = 0; i<4; i++) {
-		for(int j = 0; j<4; j++) {
-		    if(board[i][j].isMarked()) {
-			novel.add(board[i][j]);
-		    }
-		}
-	    }
-	    novel.add(sq);
-	    return novel;
-	}
 	if(w.length()>1) {
 	    for(int i = sq.getX()-1; i<=sq.getX()+1; i++) {   
 		for(int j = -1; j<=1; j++) {
@@ -227,16 +217,26 @@ public class Boggle {
 		    }
 		    Square s = board[i][j];
 		    if(!s.isMarked()) {
-			if(s.equals(w.substring(0,1))) {
+			if(s.toString().equals(w.substring(0,1))) {
 			    s.mark();
-			    this.squaresForWord(s,w.substring(1));
-			}else {
-			    this.squaresForWord(s,w);
+			    return this.squaresForWord(s,w.substring(1));
 			}
+			    s.unmark();
 		    }
 		    
 		}
 	    }
+	}
+	if( l.equals(w)) {
+	    ArrayList<Square> novel = new ArrayList();
+	    for(int i = 0; i<4; i++) {
+		for(int j = 0; j<4; j++) {
+		    if(board[i][j].isMarked()) {
+			novel.add(board[i][j]);
+		    }
+		}
+	    }
+	    return novel;
 	}
 	return null;
     }
