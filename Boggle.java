@@ -263,7 +263,7 @@ public class Boggle {
     }
 
     public static void main (String args[]) {
-	Boggle boggle = new Boggle("enable.txt");
+	Boggle boggle = new Boggle(args[0]);
 	BoggleFrame bFrame = new BoggleFrame( boggle );
 	bFrame.pack();
 	bFrame.setLocationRelativeTo(null);
