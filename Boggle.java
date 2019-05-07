@@ -195,11 +195,6 @@ public class Boggle {
 	    for(int j = 0; j<4; j++) {
 		if(w.substring(0,1).equals(board[i][j].toString())||("qu".equals(board[i][j].toString()) && w.substring(0,2).compareTo("qu") == 0)) {
 		    if(this.squaresForWord(board[i][j], w).size() > 0) {
-			for(Square[] row: board) {
-			    for (Square col: row) {
-				col.unmark();
-			    }
-			}
 			return this.squaresForWord(board[i][j], w);
 		    }
 		}
@@ -228,9 +223,13 @@ public class Boggle {
 			if(w.length()>1) {
 			    if (w.substring(1, 2).equals(s.toString())) {
 				if(w.length() > 2 && w.substring(0,2).equals("qu")) {
-				    return squaresForWord(s,w.substring(2));
+				    ArrayList<Square> returnV = new ArrayList<Square>();
+				    if ((returnV = squaresForWord(s,w.substring(2))).size() > 0)
+				    return returnV;
 				} else {
-				    return squaresForWord(s,w.substring(1));
+				    ArrayList<Square> returnV = new ArrayList<Square>();
+				    if ((returnV = squaresForWord(s,w.substring(1))).size() > 0)
+				    return returnV;
 				}
 			    }
 			}else {
@@ -243,7 +242,7 @@ public class Boggle {
 				}
 			    }
 			    if (novel.size()>0) {
-				for(Square[] row: board) {
+				for (Square[] row: board) {
 				    for (Square col: row) {
 					col.unmark();
 				    }
@@ -255,7 +254,7 @@ public class Boggle {
 		}
 	    }
 	}
-	for(Square[] row: board) {
+	for (Square[] row: board) {
 	    for (Square col: row) {
 		col.unmark();
 	    }
